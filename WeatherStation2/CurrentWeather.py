@@ -1,7 +1,7 @@
 from flask import Blueprint
-from datetime import datetime
 
 from .domain.WeatherData import WeatherData
+from .db import loadCurrentWeatherData
 
 bp = Blueprint('current_weather', __name__, url_prefix='/current')
 
@@ -11,15 +11,6 @@ def index():
 
 class CurrentWeather:
     def getCurrentWeather() -> dict:
-        w = CurrentWeather._loadCurrentWeatherData()
-        return CurrentWeather._formatWeatherDataToJson(w)
-    
-    def _loadCurrentWeatherData() -> WeatherData:
-        return WeatherData(datetime.now(), 20.0, 40.0)
-    
-    def _formatWeatherDataToJson(wd: WeatherData) -> dict:
-        return {
-            'timestamp': wd.timestamp.isoformat(timespec="seconds"),
-            'temp': wd.temp,
-            'humid': wd.humid
-        }
+        wd: WeatherData = loadCurrentWeatherData()
+        return wd.toJson()
+ 

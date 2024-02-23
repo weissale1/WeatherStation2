@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  be:
+    build: .
+    image: weatherstation2:dev
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    env_file:
+      - path: ./.env
+        required: true
+
+  db:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    env_file:
+      - path: ./.env
+        required: true
+    volumes:
+      - weather_db:/var/lib/postgresql/data
+
+volumes:
+  weather_db:
